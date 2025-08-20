@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Soporte</title>
+  <style>
+    body {
+      margin:0;
+      min-height:100vh;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      background:#0b1020;
+    }
+    button {
+      font-size:1.5rem;
+      padding:1.2rem 2rem;
+      border:none;
+      border-radius:1rem;
+      font-weight:bold;
+      cursor:pointer;
+      background:#22c55e;
+      color:#0b1020;
+    }
+    button:active { transform:scale(.97); }
+  </style>
+</head>
+<body>
+  <button id="playBtn">NECESITO SOPORTE</button>
+
+  <script>
+    const playBtn = document.getElementById('playBtn');
+
+    playBtn.addEventListener('click', async () => {
+      let audio;
+      try {
+        // Intenta primero con archivo local
+        audio = new Audio('./alerta.mp3');
+        audio.currentTime = 0;
+        await audio.play();
+        if (navigator.vibrate) navigator.vibrate([200,100,200]);
+      } catch (e) {
+        try {
+          // Si falla, usa la versión online
+          audio = new Audio('https://www.myinstants.com/media/sounds/discord-call-sound.mp3');
+          audio.currentTime = 0;
+          await audio.play();
+          if (navigator.vibrate) navigator.vibrate([200,100,200]);
+        } catch (err) {
+          alert("No se pudo reproducir el sonido. Verifica el archivo local o tu conexión.");
+        }
+      }
+    });
+  </script>
+</body>
+</html>
