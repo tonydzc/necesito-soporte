@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -9,11 +10,11 @@
       margin:0;
       min-height:100vh;
       display:flex;
-      flex-direction: column; /* 👈 fuerza columna */
+      flex-direction: column;
       justify-content:center;
       align-items:center;
       background:#0b1020;
-      text-align: center; /* 👈 centra texto */
+      text-align: center;
     }
     button {
       font-size:1.5rem;
@@ -24,7 +25,13 @@
       cursor:pointer;
       background:#22c55e;
       color:#0b1020;
-      margin-top: 20px; /* espacio con la leyenda */
+      margin-top: 20px;
+      transition: background 0.3s ease;
+    }
+    button:disabled {
+      background: #94a3b8;
+      cursor: not-allowed;
+      color: #1e293b;
     }
     button:active { transform:scale(.97); }
     h1, h2{
@@ -35,29 +42,42 @@
 </head>
 <body>
   <h1>Presione el botón para que sea atendido</h1>
- 
   <button id="playBtn">NECESITO SOPORTE</button>
 
   <script>
     const playBtn = document.getElementById('playBtn');
 
+    const sonidos = [
+      'https://www.myinstants.com/media/sounds/gta-mision-sonido.mp3',
+      'https://www.myinstants.com/media/sounds/la-leyenda-de-zelda-templo-del-tiempo.mp3',
+      'https://www.myinstants.com/media/sounds/codec-send.mp3',
+      'https://www.myinstants.com/media/sounds/bomboclat.mp3'
+    ];
+
+    const cooldown = 3000; // 3 segundos
+
     playBtn.addEventListener('click', async () => {
-      let audio;
+      // Inhabilitar botón y mostrar mensaje
+      playBtn.disabled = true;
+      playBtn.textContent = 'Llamando tecnico...';
+
+      // Elegir sonido aleatorio
+      const sonidoAleatorio = sonidos[Math.floor(Math.random() * sonidos.length)];
+      const audio = new Audio(sonidoAleatorio);
+
       try {
-        audio = new Audio('./alerta.mp3');
         audio.currentTime = 0;
         await audio.play();
-        if (navigator.vibrate) navigator.vibrate([200,100,200]);
-      } catch (e) {
-        try {
-          audio = new Audio('https://www.myinstants.com/media/sounds/gta-mision-sonido.mp3');
-          audio.currentTime = 0;
-          await audio.play();
-          if (navigator.vibrate) navigator.vibrate([200,100,200]);
-        } catch (err) {
-          alert("No se pudo reproducir el sonido. Verifica el archivo local o tu conexión.");
-        }
+        if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
+      } catch (err) {
+        alert("No se pudo reproducir el sonido. Verifica el archivo local o tu conexión.");
       }
+
+      // Reactivar botón después del cooldown
+      setTimeout(() => {
+        playBtn.disabled = false;
+        playBtn.textContent = 'NECESITO SOPORTE';
+      }, cooldown);
     });
   </script>
 </body>
